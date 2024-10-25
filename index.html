@@ -1,0 +1,88 @@
+Here’s the complete code for your index.html file, which sets up a basic homepage for a chatbot:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Homepage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chat-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 20px;
+        }
+        #chat-log {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        #user-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h2>Chatbot</h2>
+        <div id="chat-log"></div>
+        <input type="text" id="user-input" placeholder="Type your message..." />
+    </div>
+
+    <script>
+        const chatLog = document.getElementById("chat-log");
+        const userInput = document.getElementById("user-input");
+
+        userInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                const message = userInput.value;
+                if (message.trim() !== "") {
+                    addMessage("You: " + message);
+                    userInput.value = ""; // Clear input
+                    // Here you can add the chatbot's response logic
+                    addMessage("Bot: Sorry, I'm still learning!");
+                }
+            }
+        });
+
+        function addMessage(message) {
+            const messageElement = document.createElement("div");
+            messageElement.textContent = message;
+            chatLog.appendChild(messageElement);
+            chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to the bottom
+        }
+    </script>
+</body>
+</html>
+
+Explanation of the Code:
+
+	•	HTML Structure: It consists of a container for the chatbot with a title, a chat log, and an input field for user messages.
+	•	CSS Styles: Basic styling to center the chatbot on the page and make it visually appealing.
+	•	JavaScript Logic: It listens for the “Enter” key to send a message, displays user messages, and includes a placeholder response from the bot.
+
+Step 3: Deploying on GitHub Pages
+
+	1.	Commit the index.html file to your GitHub repository.
+	2.	After a few minutes, your page will be live at https://<your-username>.github.io/<your-repository-name>/.
+
+Next Steps
+
+In the next part, we’ll enhance the chatbot functionality by adding more complex responses, possibly using an API or predefined responses. Let me know if you’re ready to proceed!
