@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #login-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+        }
+        #login-container h2 {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        #login-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #login-button:hover {
+            background-color: #0077a3;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container">
+        <h2>Login</h2>
+        <input type="text" id="username-input" placeholder="Enter your username" />
+        <button id="login-button" onclick="loginUser()">Login</button>
+    </div>
+
+    <script>
+        function loginUser() {
+            const username = document.getElementById("username-input").value;
+            if (username.trim()) {
+                // Save username to localStorage
+                localStorage.setItem("username", username);
+                // Redirect to the homepage
+                window.location.href = "https://toonigy.github.io/Chatbot/";
+            } else {
+                alert("Please enter a username.");
+            }
+        }
+    </script>
+</body>
+</html>
