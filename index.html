@@ -41,9 +41,36 @@
         #debug-log {
             background-color: #e0e0e0;
         }
+        /* Styling for buttons */
+        #buttons-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-signup {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-login {
+            background-color: #008CBA;
+            color: white;
+        }
     </style>
 </head>
 <body>
+    <!-- Buttons for Sign Up and Log In -->
+    <div id="buttons-container">
+        <button class="btn btn-signup" onclick="redirectToSignup()">Sign Up</button>
+        <button class="btn btn-login" onclick="redirectToLogin()">Log In</button>
+    </div>
+
     <div id="chat-container">
         <h2>Chatbot</h2>
         <div id="chat-log"></div>
@@ -58,6 +85,15 @@
         const chatLog = document.getElementById("chat-log");
         const userInput = document.getElementById("user-input");
         const debugLog = document.getElementById("debug-log");
+
+        // Functions to handle redirection for Sign Up and Log In
+        function redirectToSignup() {
+            window.location.href = "https://toonigy.github.io/Chatbot/signup.html";
+        }
+
+        function redirectToLogin() {
+            window.location.href = "https://toonigy.github.io/Chatbot/login.html";
+        }
 
         // Event listener for user input
         userInput.addEventListener("keypress", function(event) {
