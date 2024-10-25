@@ -59,6 +59,7 @@
         const userInput = document.getElementById("user-input");
         const debugLog = document.getElementById("debug-log");
 
+        // Event listener for user input
         userInput.addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 const message = userInput.value;
@@ -66,16 +67,37 @@
                     addMessage("You: " + message);
                     userInput.value = ""; // Clear input
                     addDebug("User message sent: " + message);
-                    // Here you can add the chatbot's response logic
-                    const botResponse = "Bot: Sorry, I'm still learning!";
-                    addMessage(botResponse);
-                    addDebug("Bot response generated: " + botResponse);
+                    handleMessage(message);
                 } else {
                     addDebug("Empty message attempted.");
                 }
             }
         });
 
+        // Handle user message and generate a response
+        function handleMessage(message) {
+            let response = "I'm not sure how to respond to that.";
+
+            // Define some basic keywords and responses
+            if (message.toLowerCase().includes("hello") || message.toLowerCase().includes("hi")) {
+                response = "Hello! How can I help you today?";
+                addDebug("Keyword 'hello' detected.");
+            } else if (message.toLowerCase().includes("help")) {
+                response = "I'm here to help! Ask me anything.";
+                addDebug("Keyword 'help' detected.");
+            } else if (message.toLowerCase().includes("weather")) {
+                response = "I can’t check the weather now, but try using a weather app!";
+                addDebug("Keyword 'weather' detected.");
+            } else if (message.toLowerCase().includes("joke")) {
+                response = "Why don’t scientists trust atoms? Because they make up everything!";
+                addDebug("Keyword 'joke' detected.");
+            }
+
+            addMessage("Bot: " + response);
+            addDebug("Bot response generated: " + response);
+        }
+
+        // Add a message to the chat log
         function addMessage(message) {
             const messageElement = document.createElement("div");
             messageElement.textContent = message;
@@ -83,6 +105,7 @@
             chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to the bottom
         }
 
+        // Add a debug message to the debug log
         function addDebug(message) {
             const debugElement = document.createElement("div");
             debugElement.textContent = message;
