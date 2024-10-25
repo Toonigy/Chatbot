@@ -6,7 +6,7 @@
     <title>Chatbot Homepage</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Consolas, monospace;
             background-color: #f0f0f0;
             display: flex;
             justify-content: center;
@@ -23,7 +23,7 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-        #chat-log, #debug-log {
+        #chat-log {
             height: 150px;
             overflow-y: auto;
             border: 1px solid #ccc;
@@ -38,39 +38,34 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        /* Console-style debug log */
         #debug-log {
-            background-color: #e0e0e0;
-        }
-        /* Styling for buttons */
-        #buttons-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            font-size: 12px;
+            line-height: 1.4;
+            padding: 10px;
             border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
+            width: 100%;
+            max-width: 500px;
+            height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+            font-family: Consolas, monospace;
         }
-        .btn-signup {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .btn-login {
-            background-color: #008CBA;
-            color: white;
-        }
-        .btn-logout {
-            background-color: #f44336;
-            color: white;
-        }
+        /* Different log levels */
+        .log-message { color: #d4d4d4; }
+        .warn-message { color: #ffa500; }
+        .error-message { color: #f14c4c; }
+        .info-message { color: #569cd6; }
     </style>
 </head>
 <body>
-    <!-- Buttons for Sign Up and Log In or Username and Logout -->
-    <div id="buttons-container"></div>
+    <div id="buttons-container">
+        <button class="btn btn-signup" onclick="redirectToSignup()">Sign Up</button>
+        <button class="btn btn-login" onclick="redirectToLogin()">Log In</button>
+    </div>
 
     <div id="chat-container">
         <h2>Chatbot</h2>
@@ -78,7 +73,7 @@
         <input type="text" id="user-input" placeholder="Type your message..." />
     </div>
     <div id="debug-container">
-        <h3>Debug Log</h3>
+        <h3>Debug Console</h3>
         <div id="debug-log"></div>
     </div>
 
@@ -86,47 +81,16 @@
         const chatLog = document.getElementById("chat-log");
         const userInput = document.getElementById("user-input");
         const debugLog = document.getElementById("debug-log");
-        const buttonsContainer = document.getElementById("buttons-container");
-
-        // Check login status on page load
-        window.onload = function() {
-            const username = localStorage.getItem("username");
-            if (username) {
-                showUserLoggedIn(username);
-            } else {
-                showLoginSignupButtons();
-            }
-        };
-
-        // Display username and Logout button if logged in
-        function showUserLoggedIn(username) {
-            buttonsContainer.innerHTML = `
-                <span>Welcome, ${username}!</span>
-                <button class="btn btn-logout" onclick="logout()">Logout</button>
-            `;
-        }
-
-        // Display Sign Up and Log In buttons if not logged in
-        function showLoginSignupButtons() {
-            buttonsContainer.innerHTML = `
-                <button class="btn btn-signup" onclick="redirectToSignup()">Sign Up</button>
-                <button class="btn btn-login" onclick="redirectToLogin()">Log In</button>
-            `;
-        }
 
         // Redirect functions for Sign Up and Log In
         function redirectToSignup() {
+            addDebug("Redirecting to Sign Up page", "info");
             window.location.href = "https://toonigy.github.io/Chatbot/signup.html";
         }
 
         function redirectToLogin() {
+            addDebug("Redirecting to Log In page", "info");
             window.location.href = "https://toonigy.github.io/Chatbot/login.html";
-        }
-
-        // Logout function
-        function logout() {
-            localStorage.removeItem("username");
-            location.reload(); // Refresh the page
         }
 
         // Event listener for user input
@@ -136,10 +100,10 @@
                 if (message.trim() !== "") {
                     addMessage("You: " + message);
                     userInput.value = ""; // Clear input
-                    addDebug("User message sent: " + message);
+                    addDebug("User message sent: " + message, "log");
                     handleMessage(message);
                 } else {
-                    addDebug("Empty message attempted.");
+                    addDebug("Empty message attempted.", "warn");
                 }
             }
         });
@@ -148,23 +112,22 @@
         function handleMessage(message) {
             let response = "I'm not sure how to respond to that.";
 
-            // Define some basic keywords and responses
             if (message.toLowerCase().includes("hello") || message.toLowerCase().includes("hi")) {
                 response = "Hello! How can I help you today?";
-                addDebug("Keyword 'hello' detected.");
+                addDebug("Keyword 'hello' detected.", "info");
             } else if (message.toLowerCase().includes("help")) {
                 response = "I'm here to help! Ask me anything.";
-                addDebug("Keyword 'help' detected.");
+                addDebug("Keyword 'help' detected.", "info");
             } else if (message.toLowerCase().includes("weather")) {
                 response = "I can’t check the weather now, but try using a weather app!";
-                addDebug("Keyword 'weather' detected.");
+                addDebug("Keyword 'weather' detected.", "info");
             } else if (message.toLowerCase().includes("joke")) {
                 response = "Why don’t scientists trust atoms? Because they make up everything!";
-                addDebug("Keyword 'joke' detected.");
+                addDebug("Keyword 'joke' detected.", "info");
             }
 
             addMessage("Bot: " + response);
-            addDebug("Bot response generated: " + response);
+            addDebug("Bot response generated: " + response, "log");
         }
 
         // Add a message to the chat log
@@ -175,11 +138,14 @@
             chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to the bottom
         }
 
-        // Add a debug message to the debug log
-        function addDebug(message) {
-            const debugElement = document.createElement("div");
-            debugElement.textContent = message;
-            debugLog.appendChild(debugElement);
+        // Add a message to the debug log with specified level
+        function addDebug(message, level="log") {
+            const timeStamp = new Date().toLocaleTimeString();
+            const logMessage = document.createElement("div");
+            logMessage.classList.add(level + "-message");
+
+            logMessage.textContent = `[${timeStamp}] ${message}`;
+            debugLog.appendChild(logMessage);
             debugLog.scrollTop = debugLog.scrollHeight; // Auto-scroll to the bottom
         }
     </script>
