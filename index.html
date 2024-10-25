@@ -62,14 +62,15 @@
             background-color: #008CBA;
             color: white;
         }
+        .btn-logout {
+            background-color: #f44336;
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <!-- Buttons for Sign Up and Log In -->
-    <div id="buttons-container">
-        <button class="btn btn-signup" onclick="redirectToSignup()">Sign Up</button>
-        <button class="btn btn-login" onclick="redirectToLogin()">Log In</button>
-    </div>
+    <!-- Buttons for Sign Up and Log In or Username and Logout -->
+    <div id="buttons-container"></div>
 
     <div id="chat-container">
         <h2>Chatbot</h2>
@@ -85,14 +86,47 @@
         const chatLog = document.getElementById("chat-log");
         const userInput = document.getElementById("user-input");
         const debugLog = document.getElementById("debug-log");
+        const buttonsContainer = document.getElementById("buttons-container");
 
-        // Functions to handle redirection for Sign Up and Log In
+        // Check login status on page load
+        window.onload = function() {
+            const username = localStorage.getItem("username");
+            if (username) {
+                showUserLoggedIn(username);
+            } else {
+                showLoginSignupButtons();
+            }
+        };
+
+        // Display username and Logout button if logged in
+        function showUserLoggedIn(username) {
+            buttonsContainer.innerHTML = `
+                <span>Welcome, ${username}!</span>
+                <button class="btn btn-logout" onclick="logout()">Logout</button>
+            `;
+        }
+
+        // Display Sign Up and Log In buttons if not logged in
+        function showLoginSignupButtons() {
+            buttonsContainer.innerHTML = `
+                <button class="btn btn-signup" onclick="redirectToSignup()">Sign Up</button>
+                <button class="btn btn-login" onclick="redirectToLogin()">Log In</button>
+            `;
+        }
+
+        // Redirect functions for Sign Up and Log In
         function redirectToSignup() {
             window.location.href = "https://toonigy.github.io/Chatbot/signup.html";
         }
 
         function redirectToLogin() {
             window.location.href = "https://toonigy.github.io/Chatbot/login.html";
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("username");
+            location.reload(); // Refresh the page
         }
 
         // Event listener for user input
