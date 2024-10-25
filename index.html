@@ -54,7 +54,14 @@
             margin-bottom: 20px;
             font-family: Consolas, monospace;
         }
-        /* Different log levels */
+        /* Dropdown style */
+        #model-select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+        }
         .log-message { color: #d4d4d4; }
         .warn-message { color: #ffa500; }
         .error-message { color: #f14c4c; }
@@ -69,6 +76,12 @@
 
     <div id="chat-container">
         <h2>Chatbot</h2>
+        <!-- Model selection dropdown -->
+        <select id="model-select">
+            <option value="custom">Custom Chatbot</option>
+            <option value="chatgpt">ChatGPT Free Model</option>
+        </select>
+
         <div id="chat-log"></div>
         <input type="text" id="user-input" placeholder="Type your message..." />
     </div>
@@ -81,6 +94,7 @@
         const chatLog = document.getElementById("chat-log");
         const userInput = document.getElementById("user-input");
         const debugLog = document.getElementById("debug-log");
+        const modelSelect = document.getElementById("model-select");
 
         // Redirect functions for Sign Up and Log In
         function redirectToSignup() {
@@ -108,26 +122,45 @@
             }
         });
 
-        // Handle user message and generate a response
+        // Handle user message based on selected model
         function handleMessage(message) {
-            let response = "I'm not sure how to respond to that.";
+            const selectedModel = modelSelect.value;
+            let response = "";
 
-            if (message.toLowerCase().includes("hello") || message.toLowerCase().includes("hi")) {
-                response = "Hello! How can I help you today?";
-                addDebug("Keyword 'hello' detected.", "info");
-            } else if (message.toLowerCase().includes("help")) {
-                response = "I'm here to help! Ask me anything.";
-                addDebug("Keyword 'help' detected.", "info");
-            } else if (message.toLowerCase().includes("weather")) {
-                response = "I can’t check the weather now, but try using a weather app!";
-                addDebug("Keyword 'weather' detected.", "info");
-            } else if (message.toLowerCase().includes("joke")) {
-                response = "Why don’t scientists trust atoms? Because they make up everything!";
-                addDebug("Keyword 'joke' detected.", "info");
+            if (selectedModel === "custom") {
+                response = handleCustomChatbot(message);
+            } else if (selectedModel === "chatgpt") {
+                response = handleChatGPT(message);
             }
 
             addMessage("Bot: " + response);
-            addDebug("Bot response generated: " + response, "log");
+            addDebug("Bot response generated (" + selectedModel + "): " + response, "log");
+        }
+
+        // Define response for Custom Chatbot model
+        function handleCustomChatbot(message) {
+            let response = "I'm the Custom Chatbot!";
+            
+            if (message.toLowerCase().includes("hello") || message.toLowerCase().includes("hi")) {
+                response = "Hello! How can I help you today?";
+                addDebug("Custom bot detected 'hello' keyword.", "info");
+            } else if (message.toLowerCase().includes("help")) {
+                response = "I'm here to help! Ask me anything.";
+                addDebug("Custom bot detected 'help' keyword.", "info");
+            } else if (message.toLowerCase().includes("weather")) {
+                response = "I can't check the weather now, but try a weather app!";
+                addDebug("Custom bot detected 'weather' keyword.", "info");
+            } else if (message.toLowerCase().includes("joke")) {
+                response = "Why don’t scientists trust atoms? Because they make up everything!";
+                addDebug("Custom bot detected 'joke' keyword.", "info");
+            }
+
+            return response;
+        }
+
+        // Placeholder response for ChatGPT model
+        function handleChatGPT(message) {
+            return "This is a response from ChatGPT Free Model (simulated).";
         }
 
         // Add a message to the chat log
