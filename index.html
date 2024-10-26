@@ -69,19 +69,23 @@
     </style>
 </head>
 <body>
-    <div id="buttons-container">
-        <button class="btn btn-signup" onclick="redirectToSignup()">Sign Up</button>
-        <button class="btn btn-login" onclick="redirectToLogin()">Log In</button>
+    <!-- Conditional buttons container -->
+    <div id="auth-container">
+        <button id="signup-button" onclick="redirectToSignup()">Sign Up</button>
+        <button id="login-button" onclick="redirectToLogin()">Log In</button>
+        <!-- Displayed when logged in -->
+        <div id="user-info" style="display: none;">
+            <span id="username-display"></span>
+            <button onclick="logoutUser()">Logout</button>
+        </div>
     </div>
 
     <div id="chat-container">
         <h2>Chatbot</h2>
-        <!-- Model selection dropdown -->
         <select id="model-select">
             <option value="custom">Custom Chatbot</option>
             <option value="chatgpt">ChatGPT Free Model</option>
         </select>
-
         <div id="chat-log"></div>
         <input type="text" id="user-input" placeholder="Type your message..." />
     </div>
@@ -96,6 +100,24 @@
         const debugLog = document.getElementById("debug-log");
         const modelSelect = document.getElementById("model-select");
 
+        // Check if user is logged in on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            const username = localStorage.getItem("username");
+
+            if (username) {
+                // User is logged in
+                document.getElementById("user-info").style.display = "block";
+                document.getElementById("username-display").textContent = `Logged in as: ${username}`;
+                document.getElementById("signup-button").style.display = "none";
+                document.getElementById("login-button").style.display = "none";
+            } else {
+                // User is not logged in
+                document.getElementById("user-info").style.display = "none";
+                document.getElementById("signup-button").style.display = "block";
+                document.getElementById("login-button").style.display = "block";
+            }
+        });
+
         // Redirect functions for Sign Up and Log In
         function redirectToSignup() {
             addDebug("Redirecting to Sign Up page", "info");
@@ -107,7 +129,15 @@
             window.location.href = "https://toonigy.github.io/Chatbot/login.html";
         }
 
-        // Event listener for user input
+        // Logout function
+        function logoutUser() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("password");
+            addDebug("User logged out", "info");
+            window.location.reload(); // Reload page to reset view
+        }
+
+        // Chatbot handling code...
         userInput.addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 const message = userInput.value;
@@ -122,64 +152,43 @@
             }
         });
 
-        // Handle user message based on selected model
         function handleMessage(message) {
             const selectedModel = modelSelect.value;
-            let response = "";
-
-            if (selectedModel === "custom") {
-                response = handleCustomChatbot(message);
-            } else if (selectedModel === "chatgpt") {
-                response = handleChatGPT(message);
-            }
+            let response = selectedModel === "custom"
+                ? handleCustomChatbot(message)
+                : handleChatGPT(message);
 
             addMessage("Bot: " + response);
             addDebug("Bot response generated (" + selectedModel + "): " + response, "log");
         }
 
-        // Define response for Custom Chatbot model
         function handleCustomChatbot(message) {
             let response = "I'm the Custom Chatbot!";
-            
-            if (message.toLowerCase().includes("hello") || message.toLowerCase().includes("hi")) {
-                response = "Hello! How can I help you today?";
-                addDebug("Custom bot detected 'hello' keyword.", "info");
-            } else if (message.toLowerCase().includes("help")) {
-                response = "I'm here to help! Ask me anything.";
-                addDebug("Custom bot detected 'help' keyword.", "info");
-            } else if (message.toLowerCase().includes("weather")) {
-                response = "I can't check the weather now, but try a weather app!";
-                addDebug("Custom bot detected 'weather' keyword.", "info");
-            } else if (message.toLowerCase().includes("joke")) {
-                response = "Why don’t scientists trust atoms? Because they make up everything!";
-                addDebug("Custom bot detected 'joke' keyword.", "info");
-            }
-
+            if (message.toLowerCase().includes("hello")) response = "Hello! How can I help you?";
+            else if (message.toLowerCase().includes("help")) response = "I'm here to help!";
+            else if (message.toLowerCase().includes("weather")) response = "Check a weather app!";
+            else if (message.toLowerCase().includes("joke")) response = "Atoms make up everything!";
             return response;
         }
 
-        // Placeholder response for ChatGPT model
         function handleChatGPT(message) {
-            return "This is a response from ChatGPT Free Model (simulated).";
+            return "This is a simulated ChatGPT Free Model response.";
         }
 
-        // Add a message to the chat log
         function addMessage(message) {
             const messageElement = document.createElement("div");
             messageElement.textContent = message;
             chatLog.appendChild(messageElement);
-            chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to the bottom
+            chatLog.scrollTop = chatLog.scrollHeight;
         }
 
-        // Add a message to the debug log with specified level
-        function addDebug(message, level="log") {
+        function addDebug(message, level = "log") {
             const timeStamp = new Date().toLocaleTimeString();
             const logMessage = document.createElement("div");
-            logMessage.classList.add(level + "-message");
-
+            logMessage.classList.add(`${level}-message`);
             logMessage.textContent = `[${timeStamp}] ${message}`;
             debugLog.appendChild(logMessage);
-            debugLog.scrollTop = debugLog.scrollHeight; // Auto-scroll to the bottom
+            debugLog.scrollTop = debugLog.scrollHeight;
         }
     </script>
 </body>
