@@ -3,193 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Homepage</title>
-    <style>
-        body {
-            font-family: Consolas, monospace;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
-        }
-        #chat-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        #chat-log {
-            height: 150px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
-        #user-input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        /* Console-style debug log */
-        #debug-log {
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            font-size: 12px;
-            line-height: 1.4;
-            padding: 10px;
-            border-radius: 4px;
-            width: 100%;
-            max-width: 500px;
-            height: 200px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            margin-bottom: 20px;
-            font-family: Consolas, monospace;
-        }
-        /* Dropdown style */
-        #model-select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            border-radius: 4px;
-        }
-        .log-message { color: #d4d4d4; }
-        .warn-message { color: #ffa500; }
-        .error-message { color: #f14c4c; }
-        .info-message { color: #569cd6; }
-    </style>
+    <title>Math RPG Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Conditional buttons container -->
-    <div id="auth-container">
-        <button id="signup-button" onclick="redirectToSignup()">Sign Up</button>
-        <button id="login-button" onclick="redirectToLogin()">Log In</button>
-        <!-- Displayed when logged in -->
-        <div id="user-info" style="display: none;">
-            <span id="username-display"></span>
-            <button onclick="logoutUser()">Logout</button>
+    <!-- Login Section -->
+    <div id="login-form">
+        <h2>Login to Your Account</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="login-btn">Login</button>
+        <button id="guest-mode-btn">Play as Guest</button>
+    </div>
+
+    <!-- Main Game UI (hidden initially) -->
+    <div id="game-ui" style="display:none;">
+        <!-- Game UI Elements (Health bar, level, etc.) -->
+        <div class="game-ui">
+            <div class="health-container">
+                <div id="health-bar"></div>
+            </div>
+            <div id="level-display">Level: 1</div>
+            <button id="toggle-music-btn">Play Music</button>
         </div>
+
+        <!-- Game Canvas -->
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <button id="settings-btn">Settings</button>
+            <button id="backpack-btn">Backpack</button>
+        </div>
+
+        <!-- Battle UI (hidden until battle starts) -->
+        <div id="battle-ui" style="display:none;">
+            <h2 id="enemy-name">Enemy: Goblin</h2>
+            <div id="enemy-health-container">
+                <div id="enemy-health-bar" style="width: 100%; background-color: red;"></div>
+            </div>
+            <div id="player-health-container">
+                <div id="player-health-bar" style="width: 100%; background-color: green;"></div>
+            </div>
+            <div id="math-question"></div>
+            <input type="text" id="math-answer" placeholder="Your answer" />
+            <button id="submit-answer">Submit Answer</button>
+            <button id="heal-button">Heal</button>
+            <div id="battle-log"></div>
+        </div>
+
+        <!-- Background Music -->
+        <audio id="bgm" src="bgm-intro.mp3" loop></audio>
+        <button id="start-battle-btn">Start Battle</button>
     </div>
 
-    <div id="chat-container">
-        <h2>Chatbot</h2>
-        <select id="model-select">
-            <option value="custom">Custom Chatbot</option>
-            <option value="chatgpt">ChatGPT Free Model</option>
-        </select>
-        <div id="chat-log"></div>
-        <input type="text" id="user-input" placeholder="Type your message..." />
-    </div>
-    <div id="debug-container">
-        <h3>Debug Console</h3>
-        <div id="debug-log"></div>
-    </div>
-
-    <script>
-        const chatLog = document.getElementById("chat-log");
-        const userInput = document.getElementById("user-input");
-        const debugLog = document.getElementById("debug-log");
-        const modelSelect = document.getElementById("model-select");
-
-        // Check if user is logged in on page load
-        document.addEventListener("DOMContentLoaded", function() {
-            const username = localStorage.getItem("username");
-
-            if (username) {
-                // User is logged in
-                document.getElementById("user-info").style.display = "block";
-                document.getElementById("username-display").textContent = `Logged in as: ${username}`;
-                document.getElementById("signup-button").style.display = "none";
-                document.getElementById("login-button").style.display = "none";
-            } else {
-                // User is not logged in
-                document.getElementById("user-info").style.display = "none";
-                document.getElementById("signup-button").style.display = "block";
-                document.getElementById("login-button").style.display = "block";
-            }
-        });
-
-        // Redirect functions for Sign Up and Log In
-        function redirectToSignup() {
-            addDebug("Redirecting to Sign Up page", "info");
-            window.location.href = "https://toonigy.github.io/Chatbot/signup.html";
-        }
-
-        function redirectToLogin() {
-            addDebug("Redirecting to Log In page", "info");
-            window.location.href = "https://toonigy.github.io/Chatbot/login.html";
-        }
-
-        // Logout function
-        function logoutUser() {
-            localStorage.removeItem("username");
-            localStorage.removeItem("password");
-            addDebug("User logged out", "info");
-            window.location.reload(); // Reload page to reset view
-        }
-
-        // Chatbot handling code...
-        userInput.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                const message = userInput.value;
-                if (message.trim() !== "") {
-                    addMessage("You: " + message);
-                    userInput.value = ""; // Clear input
-                    addDebug("User message sent: " + message, "log");
-                    handleMessage(message);
-                } else {
-                    addDebug("Empty message attempted.", "warn");
-                }
-            }
-        });
-
-        function handleMessage(message) {
-            const selectedModel = modelSelect.value;
-            let response = selectedModel === "custom"
-                ? handleCustomChatbot(message)
-                : handleChatGPT(message);
-
-            addMessage("Bot: " + response);
-            addDebug("Bot response generated (" + selectedModel + "): " + response, "log");
-        }
-
-        function handleCustomChatbot(message) {
-            let response = "I'm the Custom Chatbot!";
-            if (message.toLowerCase().includes("hello")) response = "Hello! How can I help you?";
-            else if (message.toLowerCase().includes("help")) response = "I'm here to help!";
-            else if (message.toLowerCase().includes("weather")) response = "Check a weather app!";
-            else if (message.toLowerCase().includes("joke")) response = "Atoms make up everything!";
-            return response;
-        }
-
-        function handleChatGPT(message) {
-            return "This is a simulated ChatGPT Free Model response.";
-        }
-
-        function addMessage(message) {
-            const messageElement = document.createElement("div");
-            messageElement.textContent = message;
-            chatLog.appendChild(messageElement);
-            chatLog.scrollTop = chatLog.scrollHeight;
-        }
-
-        function addDebug(message, level = "log") {
-            const timeStamp = new Date().toLocaleTimeString();
-            const logMessage = document.createElement("div");
-            logMessage.classList.add(`${level}-message`);
-            logMessage.textContent = `[${timeStamp}] ${message}`;
-            debugLog.appendChild(logMessage);
-            debugLog.scrollTop = debugLog.scrollHeight;
-        }
-    </script>
+    <!-- Link to Game Scripts -->
+    <script src="game.js"></script>
 </body>
 </html>
