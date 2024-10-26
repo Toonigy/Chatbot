@@ -25,7 +25,7 @@
         #login-container h2 {
             margin-bottom: 20px;
         }
-        input[type="text"] {
+        input[type="text"], input[type="password"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -52,19 +52,24 @@
     <div id="login-container">
         <h2>Login</h2>
         <input type="text" id="username-input" placeholder="Enter your username" />
+        <input type="password" id="password-input" placeholder="Enter your password" />
         <button id="login-button" onclick="loginUser()">Login</button>
     </div>
 
     <script>
         function loginUser() {
             const username = document.getElementById("username-input").value;
-            if (username.trim()) {
-                // Save username to localStorage
+            const password = document.getElementById("password-input").value;
+
+            if (username.trim() && password.trim()) {
+                // Save username and password to localStorage (for demonstration purposes)
                 localStorage.setItem("username", username);
+                localStorage.setItem("password", password);
+
                 // Redirect to the homepage
                 window.location.href = "https://toonigy.github.io/Chatbot/";
             } else {
-                alert("Please enter a username.");
+                alert("Please enter both a username and password.");
             }
         }
     </script>
