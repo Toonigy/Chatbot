@@ -3,37 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up</title>
+  <title>Signup - Chatbot</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="toolbar">
-    <div class="toolbar-content">
-      <h1>Chatbot - Sign Up</h1>
-      <nav>
-        <button id="login-button">Log In</button>
-      </nav>
-    </div>
-  </header>
+  <h1>Signup to Chat with Our Bot</h1>
+  
+  <form id="signup-form">
+    <label for="username">Enter your name:</label>
+    <input type="text" id="username" name="username" required>
+    
+    <label for="password">Enter your password:</label>
+    <input type="password" id="password" name="password" required>
 
-  <main>
-    <section class="form-section">
-      <h2>Create Your Account</h2>
-      <form id="signup-form">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" required>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" required>
-        </div>
-
-        <button type="submit">Sign Up</button>
-      </form>
-    </section>
-  </main>
+    <button type="submit">Sign Up</button>
+  </form>
 
   <script src="signup.js"></script>
 </body>
