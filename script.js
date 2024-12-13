@@ -5,3 +5,8 @@ document.getElementById("signup-button").addEventListener("click", () => {
 document.getElementById("login-button").addEventListener("click", () => {
   window.location.href = "login.html"; // Link to the Login page
 });
+
+document.getElementById("guest-button").addEventListener("click", () => {
+  // Redirect to a chatbot page, simulating guest mode
+  window.location.href = "chatbot.html"; // Chatbot page for guest users
+});
