@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot - Guest Mode</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="toolbar">
+    <div class="toolbar-content">
+      <h1>Chatbot</h1>
+      <nav>
+        <button id="logout-button">Log Out</button> <!-- Log out button for Guest Mode -->
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="chat-section">
+      <h2>Chat with the Bot!</h2>
+      <div id="chatbox">
+        <p><strong>Chatbot:</strong> Hello! How can I assist you today?</p>
+      </div>
+      <input type="text" id="user-input" placeholder="Type your message..." />
+      <button id="send-button">Send</button>
+    </section>
+  </main>
+  <script src="chatbot.js"></script>
+</body>
+</html>
