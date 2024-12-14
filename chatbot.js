@@ -1,59 +1,78 @@
-document.getElementById("send-button").addEventListener("click", () => {
-  const userInput = document.getElementById("user-input").value;
-
-  if (userInput.trim() === "") return; // Prevent sending empty messages
-
-  // Display user message
+document.addEventListener("DOMContentLoaded", function () {
   const chatbox = document.getElementById("chatbox");
-  chatbox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
 
-  // Simulate chatbot response
-  const botResponse = generateBotResponse(userInput);
-  chatbox.innerHTML += `<p><strong>Chatbot:</strong> ${botResponse}</p>`;
+  // Load user profile from localStorage
+  const userProfile = JSON.parse(localStorage.getItem("userProfile"));
 
-  // Scroll to the latest message
-  chatbox.scrollTop = chatbox.scrollHeight;
+  // Display personalized greeting if profile exists
+  if (userProfile && userProfile.name) {
+    const greetings = {
+      formal: `Hello, ${userProfile.name}! How can I help you today?`,
+      casual: `Hey ${userProfile.name}! What's up?`,
+      fun: `Hiya, ${userProfile.name}! Ready to chat?`,
+    };
+    const greeting = greetings[userProfile.greetingStyle] || greetings.formal;
 
-  // Clear input field
-  document.getElementById("user-input").value = "";
+    chatbox.innerHTML = `<p><strong>Chatbot:</strong> ${greeting}</p>`;
+
+    // Add profile picture if provided
+    if (userProfile.profilePic) {
+      const profilePicElement = document.createElement("img");
+      profilePicElement.src = userProfile.profilePic;
+      profilePicElement.alt = "Profile Picture";
+      profilePicElement.style.width = "50px";
+      profilePicElement.style.borderRadius = "50%";
+      chatbox.appendChild(profilePicElement);
+    }
+  } else {
+    // Default greeting for users without a profile
+    chatbox.innerHTML = `<p><strong>Chatbot:</strong> Hello! How can I assist you today?</p>`;
+  }
+
+  // Handle sending messages from the user
+  document.getElementById("send-button").addEventListener("click", function () {
+    const userInput = document.getElementById("user-input").value.trim();
+    if (userInput === "") return;
+
+    // Display user message
+    chatbox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+
+    // Generate and display bot response
+    const botResponse = generateBotResponse(userInput);
+    chatbox.innerHTML += `<p><strong>Chatbot:</strong> ${botResponse}</p>`;
+
+    // Scroll to the bottom of the chat
+    chatbox.scrollTop = chatbox.scrollHeight;
+
+    // Clear the input field
+    document.getElementById("user-input").value = "";
+  });
 });
 
-// Simulate a basic bot response based on input
+// Generate a bot response based on user input
 function generateBotResponse(userInput) {
   const lowerInput = userInput.toLowerCase();
 
-  // Common greeting responses
-  if (lowerInput.includes("hello") || lowerInput.includes("hi") || lowerInput.includes("hey")) {
+  // Define responses for common phrases
+  if (lowerInput.includes("hi") || lowerInput.includes("hello")) {
     return "Hello! How can I assist you today?";
   }
 
-  // Farewell response
-  if (lowerInput.includes("bye") || lowerInput.includes("goodbye") || lowerInput.includes("see you")) {
-    return "Goodbye! Have a great day!";
-  }
-
-  // General questions or fallback response
   if (lowerInput.includes("how are you")) {
-    return "I'm just a bot, but I'm doing well! How about you?";
-  }
-
-  if (lowerInput.includes("your name")) {
-    return "I don't have a name, but you can call me Chatbot!";
+    return "I'm just a bot, but I'm doing great! How about you?";
   }
 
   if (lowerInput.includes("thank you") || lowerInput.includes("thanks")) {
-    return "You're welcome!";
+    return "You're welcome! Let me know if there's anything else I can help with.";
   }
 
-  if (lowerInput.includes("help") || lowerInput.includes("support")) {
-    return "Sure, what do you need help with?";
+  if (lowerInput.includes("goodbye") || lowerInput.includes("bye")) {
+    return "Goodbye! Have a great day!";
   }
 
-  // Default response if no specific match is found
-  return "I'm not sure how to respond to that. Can you try asking something else?";
+  if (lowerInput.includes("help")) {
+    return "Sure! I'm here to help. Please ask me anything.";
+  }
+
+  return "I didn't quite understand that. Can you ask something else?";
 }
-
-document.getElementById("logout-button").addEventListener("click", () => {
-  // Redirect to homepage, effectively "logging out" of Guest Mode
-  window.location.href = "index.html";
-});
