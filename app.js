@@ -26,6 +26,11 @@ loginBtn.addEventListener('click', () => {
 
 // Function to start chat for a user (guest mode for now)
 function startChat(userType) {
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+        userType = currentUser; // Change to logged-in user's name
+    }
+
     chatArea.innerHTML = `
         <div id="chatbox">
             <div id="chat-output"></div>
