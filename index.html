@@ -33,5 +33,22 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+        // Add event listeners to the buttons
+        document.getElementById('guest-btn').addEventListener('click', () => {
+            // Redirect to chatbot as guest
+            window.location.href = '#chat-area'; // Optionally, show chatbot directly
+        });
+
+        document.getElementById('signup-btn').addEventListener('click', () => {
+            // Redirect to signup page
+            window.location.href = 'signup.html';
+        });
+
+        document.getElementById('login-btn').addEventListener('click', () => {
+            // Redirect to login page
+            window.location.href = 'login.html';
+        });
+    </script>
 </body>
 </html>
